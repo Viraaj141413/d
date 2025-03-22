@@ -16,25 +16,30 @@
     </iframe>
 
     <script>
-        window.addEventListener('load', function() {
-            // Try to access the iframe content and hide the button
+        // Function to hide injected elements (e.g., buttons, links)
+        function hideInjectedElements() {
             var iframe = document.getElementById('gameIframe');
-            
-            // Check if iframe is accessible and loaded
-            if (iframe && iframe.contentWindow) {
+
+            // Ensure the iframe is fully loaded and accessible
+            iframe.onload = function() {
                 try {
                     var iframeDocument = iframe.contentWindow.document;
-                    var createButton = iframeDocument.querySelector("#createButton"); // Replace with actual button ID if known
                     
-                    // If the button is found, hide it
-                    if (createButton) {
-                        createButton.style.display = 'none';
+                    // Look for elements that may have a reference to 'created.app' or similar
+                    var unwantedButton = iframeDocument.querySelector('a[href="https://created.app/"]');  // Match the href of the injected link
+                    
+                    // If the element is found, hide it
+                    if (unwantedButton) {
+                        unwantedButton.style.display = 'none';
                     }
                 } catch (e) {
-                    console.error("Unable to access iframe content:", e);
+                    console.error("Error accessing iframe content:", e);
                 }
-            }
-        });
+            };
+        }
+
+        // Call the function to hide unwanted elements once the page is loaded
+        window.onload = hideInjectedElements;
     </script>
 </body>
 </html>
