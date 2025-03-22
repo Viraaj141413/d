@@ -1,0 +1,9 @@
+/* Global CSS to hide the button */
+button.your-button-class {
+    display: none !important;  /* Hides the button */
+}
+
+/* Alternatively, if the button has an ID */
+button#your-button-id {
+    display: none !important;  /* Hides the button */
+}
