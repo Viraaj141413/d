@@ -1,67 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Embedded PeaksAIG</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100vh;
-      border: none;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Hide buttons inside the iframe */
-    iframe::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: 9999;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website</title>
 </head>
 <body>
+    <!-- Your page content goes here -->
 
-<iframe id="myIframe" src="https://peaksaigg.created.app" title="PeaksAIG"></iframe>
+    <!-- Add this script to block the button creation or remove it automatically -->
+    <script>
+        // Block the creation of <a> element with href="https://created.app"
+        const originalCreateElement = document.createElement;
 
-<script>
-  // Remove button after iframe loads (in case it's added dynamically)
-  const iframe = document.getElementById('myIframe');
+        document.createElement = function(tag) {
+            if (tag.toLowerCase() === 'a') {
+                const originalLink = originalCreateElement.apply(document, arguments);
+                const proxyLink = new Proxy(originalLink, {
+                    set(target, key, value) {
+                        if (key === 'href' && value === 'https://created.app') {
+                            console.log("Blocked the button with href=https://created.app");
+                            return true;  // Do nothing if it's the blocked href
+                        }
+                        target[key] = value;  // Allow other properties to be set
+                        return true;
+                    }
+                });
+                return proxyLink;
+            }
+            return originalCreateElement.apply(document, arguments);
+        };
 
-  iframe.onload = () => {
-    try {
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-      // Try removing the button directly
-      const removeButton = () => {
-        const button = iframeDoc.querySelector('button');
-        if (button) {
-          button.remove();
-          console.log('Button removed!');
-        }
-      };
-
-      // Initial attempt to remove the button
-      removeButton();
-
-      // Keep checking in case it gets injected later
-      setInterval(removeButton, 100);
-    } catch (error) {
-      console.error('Cannot access iframe content due to cross-origin policy:', error);
-    }
-  };
-</script>
-
+        // Optionally, you can also remove the button after page load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const button = document.querySelector('a[href="https://created.app"]');
+                if (button) {
+                    button.remove();
+                    console.log("Button removed after page load");
+                }
+            }, 1000); // Wait 1 second before removing
+        });
+    </script>
 </body>
 </html>
