@@ -1,41 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot Interface</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .iframe-container {
-            width: 100%;
-            max-width: 1000px;
-        }
-        iframe {
-            width: 100%;
-            height: 569px;
-            border: none;
-        }
-        /* Ensuring no button or unexpected elements are displayed */
-        button {
-            display: none !important; /* Make sure no button is visible */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Embedded PeaksAIG</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100vh;
+      border: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hide buttons inside the iframe */
+    iframe::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="iframe-container">
-        <iframe src="https://peaksaigg.created.app" title="AI Chatbot Interface"></iframe>
-    </div>
+<iframe id="myIframe" src="https://peaksaigg.created.app" title="PeaksAIG"></iframe>
+
+<script>
+  // Remove button after iframe loads (in case it's added dynamically)
+  const iframe = document.getElementById('myIframe');
+
+  iframe.onload = () => {
+    try {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+      // Try removing the button directly
+      const removeButton = () => {
+        const button = iframeDoc.querySelector('button');
+        if (button) {
+          button.remove();
+          console.log('Button removed!');
+        }
+      };
+
+      // Initial attempt to remove the button
+      removeButton();
+
+      // Keep checking in case it gets injected later
+      setInterval(removeButton, 100);
+    } catch (error) {
+      console.error('Cannot access iframe content due to cross-origin policy:', error);
+    }
+  };
+</script>
 
 </body>
 </html>
